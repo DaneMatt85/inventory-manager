@@ -1,0 +1,823 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Inventory-Manager",
+		"_postman_id": "ab4b1d39-62ba-a86a-dc57-454cede464a0",
+		"description": "This is a simple inventory API with 3 types of resources:\n\n- Products (has many SKUs, has many categories)\n- SKUs (belongs to one product)\n- Categories (has many products)\n\n<strong>Associated Resources</strong><br/>\nData updates will generally be limited to each resource's fields, except notably the product POST request will allow you to create new SKUs and Categories with the same payload. Otherwise associated resources will only be added and removed by specifing their existing IDs. \n\n<strong>Response Format</strong><br/>\nAll API requests will always return a JSON object with 3 fields:\n\n- Success: True or false\n- Data: The resource data, either the updated resource data or empty if no resource was found.\n- Errors: If success is false error messages will be found here, for a successful response this will be an empty array.\n\nIn addition to this the following HTTP codes will be returned:\n\n- 200: Successful request\n- 201: Successful resource created\n- 400: General error\n- 403: Authentication failed and access denied\n- 404: Resource not found",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"description": "Each product can have multiple SKUs, using these methods you can add, update or delete a product.",
+			"item": [
+				{
+					"name": "All Products",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/products",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Get a list of all products with their associated SKU and category data. "
+					},
+					"response": []
+				},
+				{
+					"name": "Specific Product",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/products/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Get a specific product linked with its associated SKU and category data. "
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/products",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Product 2",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "skus[0][sku]",
+									"value": "SKU3",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "skus[0][price]",
+									"value": "100",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "skus[0][quantity]",
+									"value": "10",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "skus[1][sku]",
+									"value": "SKU4",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "skus[1][price]",
+									"value": "100",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "skus[1][quantity]",
+									"value": "10",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "categories[0][id]",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "categories[1][id]",
+									"value": "2",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Create a new product.\n\n<strong>Fields</strong>\n\n- name (string, required)\n- skus (array of new SKU resources or ids, optional)\n- categories (array of new categories resources or ids, optional)\n\n<strong>Notes:</strong>\n- Create a new product by posting through just its name. \n- Associated SKUs and Categories can also be created as new resources by sending an array of resources or alternatively a list of existing resource ids."
+					},
+					"response": []
+				},
+				{
+					"name": "Product Update",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/products/2",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "NEW Patch Product 2",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "skus[_ids][]",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "categories[_ids][]",
+									"value": "2",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Update a product with new data. \n\n<strong>Fields</strong>\n\n- name (string, required)\n- skus[_ids] (array of ids, optional)\n- categories[_ids] (array of ids, optional)\n\n<strong>Notes:</strong>\n- Unlike PUT you can send through only the data you want to update, existing categories and SKUs not in the payload will stay linked to the product."
+					},
+					"response": []
+				},
+				{
+					"name": "Product Update",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/products/2",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "NEW Patch Product 2",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "skus[_ids][]",
+									"value": "2",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "categories[_ids][]",
+									"value": "2",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"description": "Update a product with new data. \n\n<strong>Fields</strong>\n\n- name (string, required)\n- skus[_ids] (array of ids, optional)\n- categories[_ids] (array of ids, optional)\n\n<strong>NOTES:</strong>\n- This call is idempotent, as such all product data will be updated to the new values. If not present, linked resources will be unlinked and <strong>dependent resources such as SKUs will be deleted.</strong> "
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/products/2",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Delete a specific product and associated SKUs."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SKUs",
+			"description": "",
+			"item": [
+				{
+					"name": "All SKUs",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/skus",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "catnew2277",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "products[_ids][]",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Get a list of all SKUs."
+					},
+					"response": []
+				},
+				{
+					"name": "Specific SKU",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/skus/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "catnew2277",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "products[_ids][]",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Get a specific SKU."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Sku",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/skus",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "sku",
+									"value": "SKU5",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "100",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "quantity",
+									"value": "10",
+									"type": "text",
+									"description": ""
+								},
+								{
+									"key": "product_id",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Create a new SKU.\n\n<strong>Fields</strong><br/>\n\n- sku (string, required)\n- product_id (int, required)\n- quantity (int, required)\n- price (float, required)\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Sku Update",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/skus/5",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "sku",
+									"value": "PATCH SKU3",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "200",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Update a SKU.\n\n<strong>Fields</strong><br/>\n\n- sku (string, optional)\n- product_id (int, optional)\n- quantity (int, optional)\n- price (float, optional)\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Sku Update",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/skus/5",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "sku",
+									"value": "PUT SKU3",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "300",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "30",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "product_id",
+									"value": "1",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Update a SKU.\n\n<strong>Fields</strong><br/>\n\n- sku (string, required)\n- product_id (int, required)\n- quantity (int, required)\n- price (float, required)\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete SKU",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/skus/5",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Delete a specific SKU."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"description": "",
+			"item": [
+				{
+					"name": "All Categories",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/categories",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Get a list of all categories."
+					},
+					"response": []
+				},
+				{
+					"name": "Specific Category",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/categories/1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Get a specific category."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Category",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/categories",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Category 1",
+									"type": "text",
+									"description": ""
+								}
+							]
+						},
+						"description": "Create a new Category.\n\n<strong>Fields</strong><br/>\n\n- name (string, required)\n- products[_ids] (array of product ids, optional)"
+					},
+					"response": []
+				},
+				{
+					"name": "Category Update",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/categories/3",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "PATCH Category 3",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Update a category with new data. \n\n<strong>Fields</strong><br/>\n\n- name (string, required)\n- products[_ids] (array of product ids, optional)\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Category Update",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/categories/3",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "PUT Category 3",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "Creat a new Category.\n\n<strong>Fields</strong><br/>\n\n- name (string, required)\n- products[_ids] (array of product ids, optional)\n\n<strong>Notes</strong><br/> \n- This call is idempotent, as such all currently linked products not in the payload will be unlinked. "
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "admin",
+								"password": "9c2aee61575b1764f534914c508a831e005b070c3671f8ac6561704e32de9c82",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "http://localhost/api/categories/3",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YWRtaW46OWMyYWVlNjE1NzViMTc2NGY1MzQ5MTRjNTA4YTgzMWUwMDViMDcwYzM2NzFmOGFjNjU2MTcwNGUzMmRlOWM4Mg==",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Delete a specific category."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
